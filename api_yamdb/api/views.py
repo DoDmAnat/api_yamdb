@@ -1,3 +1,18 @@
 from django.shortcuts import render
+from rest_framework import permissions, viewsets
+from reviews.models import Category, Genre, Title
 
-# Create your views here.
+from .permissions import IsAdminOrReadOnly
+from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
+
+
+class GenreViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = (IsAdminOrReadOnly,)
+
+
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = (IsAdminOrReadOnly,)
