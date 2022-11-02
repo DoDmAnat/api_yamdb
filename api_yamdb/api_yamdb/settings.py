@@ -22,9 +22,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_filters',
-    'reviews',
     'api',
+    'reviews',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -104,7 +104,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'reviews.User'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 

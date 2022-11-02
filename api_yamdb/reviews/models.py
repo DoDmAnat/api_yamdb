@@ -1,3 +1,5 @@
+from email.policy import default
+
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -40,6 +42,8 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.CharField(verbose_name='Название произведения',
                             max_length=200)
+    year = models.IntegerField(verbose_name='Дата выхода',
+                               default=None)
     description = models.TextField(verbose_name='Описание произведения',
                                    null=True,
                                    blank=True)
@@ -87,7 +91,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-        ordering = ['pub_date']
+        ordering = ['-pub_date']
         constraints = [
             models.UniqueConstraint(fields=['title', 'author'],
                                     name='unique_review'), ]
