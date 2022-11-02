@@ -104,7 +104,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'reviews.User'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
