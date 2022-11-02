@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, viewsets
 from rest_framework.viewsets import ViewSet
+
 from reviews.models import Category, Genre, Review, Title
 
 from .permissions import IsAdminOrReadOnly
@@ -21,12 +22,9 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-<<<<<<< HEAD
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
-=======
-    pass
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -53,4 +51,3 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review = get_object_or_404(Review, pk=self.kwargs.get('review_id'))
         serializer.save(author=self.request.user, review=review)
->>>>>>> master
