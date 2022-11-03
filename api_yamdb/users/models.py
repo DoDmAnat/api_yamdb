@@ -35,6 +35,7 @@ class User(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         # Не уверен что правильно, но как-то так
+        # В ТАКОМ ВИДЕ МИГРАЦИИ НЕ ДЕЛАТЬ, БД ЛОМАЕТСЯ НАПРОЧЬ))
         # constraints = [
         # models.CheckConstraint(check=models.Q(username='me'),
         # name='username_is_not_me')]
