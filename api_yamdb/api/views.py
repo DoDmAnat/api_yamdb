@@ -12,14 +12,14 @@ class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     http_method_names = ['get', 'post', 'delete', ]
     serializer_class = GenreSerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    #permission_classes = (IsAdminOrReadOnly,)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     http_method_names = ['get', 'post', 'delete', ]
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
+    #permission_classes = (IsAdminOrReadOnly,)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
