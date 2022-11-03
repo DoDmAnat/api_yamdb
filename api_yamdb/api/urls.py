@@ -5,7 +5,8 @@ from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
                     ReviewViewSet, TitleViewSet)
 
 # from rest_framework_simplejwt.views import (TokenObtainPairView,
-#                                             TokenRefreshView, TokenVerifyView)
+#                                             TokenRefreshView,
+#                                             TokenVerifyView)
 
 
 # jwt_patterns = [
