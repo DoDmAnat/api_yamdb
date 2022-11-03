@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, viewsets
 from rest_framework.viewsets import ViewSet
-
 from reviews.models import Category, Genre, Review, Title
 
 from .permissions import IsAdminOrReadOnly
@@ -9,14 +8,16 @@ from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReviewSerializer, TitleSerializer)
 
 
-class GenreViewSet(viewsets.ReadOnlyModelViewSet):
+class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
+    http_method_names = ['get', 'post', 'delete', ]
     serializer_class = GenreSerializer
     permission_classes = (IsAdminOrReadOnly,)
 
 
-class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
+    http_method_names = ['get', 'post', 'delete', ]
     serializer_class = CategorySerializer
     permission_classes = (IsAdminOrReadOnly,)
 
