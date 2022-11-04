@@ -39,7 +39,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', ]
     filter_backends = (DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter)
-    serializer_class = TitleSerializer
     ordering_fields = ('category', 'genre', 'name', 'year')
     #permission_classes = (IsAdminOrReadOnly,)
 

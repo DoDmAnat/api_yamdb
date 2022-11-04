@@ -40,8 +40,14 @@ class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ("name", "year", "description",
+        fields = ("id", "name", "year", "description",
                   "genre", "category")
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['category'] = CategorySerializer(instance.category).data
+        response['genre'] = GenreSerializer(instance.genre, many=True).data
+        return response
 
 
 class ReadOnlyTitleSerializer(serializers.ModelSerializer):
