@@ -1,9 +1,10 @@
+from api.service import TitlesFilter
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404, render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.viewsets import ViewSet
-from api.service import TitlesFilter
+
 from reviews.models import Category, Genre, Review, Title
 
 from .permissions import IsAdminOrReadOnly
