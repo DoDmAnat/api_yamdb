@@ -1,5 +1,18 @@
+import secrets
+import string
+from unittest.util import _MAX_LENGTH
+
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+LENGTH = 6
+
+
+def generate_confirmation_code():
+    return ''.join(secrets.choice(
+        string.ascii_uppercase + string.digits
+    ) for x in range(LENGTH))
 
 
 class User(AbstractUser):
@@ -24,6 +37,8 @@ class User(AbstractUser):
                            null=True,
                            blank=True)
 
+    USERNAME_FIELD = 'username'
+
     def is_moderator(self):
         return self.role == self.MODERATOR
 
@@ -34,8 +49,23 @@ class User(AbstractUser):
         ordering = ['id']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        # Не уверен что правильно, но как-то так
-        # В ТАКОМ ВИДЕ МИГРАЦИИ НЕ ДЕЛАТЬ, БД ЛОМАЕТСЯ НАПРОЧЬ))
-        # constraints = [
-        # models.CheckConstraint(check=models.Q(username='me'),
-        # name='username_is_not_me')]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=['username', 'email'],
+                name='unique_username_email'
+            )
+        ]
+
+    def __str__(self):
+        return self.username
+
+
+class ConfirmationCode(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    code = models.CharField(
+        max_length=LENGTH, default=generate_confirmation_code
+    )
+
+    def __str__(self):
+        return self.code
