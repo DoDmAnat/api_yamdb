@@ -18,7 +18,7 @@ class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filterset_fields = ('name',)
-    search_fields = ("slug",)
+    search_fields = ("name",)
     #permission_classes = (IsAdminOrReadOnly,)
 
 
@@ -28,7 +28,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filterset_fields = ('name',)
-    search_fields = ("slug",)
+    search_fields = ("name",)
     #permission_classes = (IsAdminOrReadOnly,)
 
 
