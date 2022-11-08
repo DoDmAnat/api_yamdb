@@ -1,5 +1,4 @@
 from datetime import datetime
-from email.policy import default
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -105,6 +104,9 @@ class Review(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['title', 'author'],
                                     name='unique_review'), ]
+
+    def __str__(self):
+        return self.text[:15]
 
 
 class Comment(models.Model):

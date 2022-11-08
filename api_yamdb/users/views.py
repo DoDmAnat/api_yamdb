@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework import filters, status, viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view, action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, action, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -17,7 +17,7 @@ from .serializers import (SignUpSerializer, TokenSerializer,
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
     permission_classes = (AuthorOrAdmin,)
     pagination_class = PageNumberPagination
@@ -43,6 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def sign_up(request):
     serializer = SignUpSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -62,13 +63,14 @@ def sign_up(request):
     user.confirmation_code = confirmation_code
     user.save()
     send_mail(
-        'Ваш код подверждения', confirmation_code,
+        'Ваш код подтверждения', confirmation_code,
         ['admin@yamdb.com'], (email,), fail_silently=False
     )
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def get_token(request):
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
