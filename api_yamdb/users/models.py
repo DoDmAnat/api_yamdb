@@ -9,32 +9,40 @@ class User(AbstractUser):
     ROLES = [(ADMIN, 'Administrator'),
              (MODERATOR, 'Moderator'),
              (USER, 'User'), ]
+    username = models.CharField(
+        'Имя пользователя',
+        max_length=150,
+        unique=True,
+    )
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    email = models.EmailField('Email', max_length=254, unique=True)
+    role = models.CharField(
+        'Роль пользователя',
+        choices=ROLES,
+        max_length=50, default=USER
+    )
+    bio = models.TextField('Биография', blank=True)
+    confirmation_code = models.CharField(
+        'Код подтверждения',
+        max_length=100,
+        null=True
+    )
 
-    username = models.CharField(verbose_name='Имя пользователя',
-                                max_length=150,
-                                null=True,
-                                unique=True)
-    email = models.EmailField(verbose_name='Адрес почты',
-                              unique=True, )
-    role = models.CharField(verbose_name='Должность',
-                            max_length=50,
-                            choices=ROLES,
-                            default=USER)
-    bio = models.TextField(verbose_name='Биография',
-                           null=True,
-                           blank=True)
+    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELDS = 'email'
 
-    def is_moderator(self):
-        return self.role == self.MODERATOR
+    def __str__(self):
+        return str(self.username)
 
+    @property
     def is_admin(self):
-        return self.role == self.ADMIN
+        return self.role == "admin" or self.is_superuser
 
-    class Meta:
-        ordering = ['id']
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        # Не уверен что правильно, но как-то так
-        # constraints = [
-        # models.CheckConstraint(check=models.Q(username='me'),
-        # name='username_is_not_me')]
+    @property
+    def is_moderator(self):
+        return self.role == "moderator"
+
+    @property
+    def is_user(self):
+        return self.role == "user"

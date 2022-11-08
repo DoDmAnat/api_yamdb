@@ -1,10 +1,18 @@
-from email.policy import default
+from datetime import datetime
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 User = get_user_model()
+
+
+def validate_date(value):
+    if value > datetime.now().year:
+        raise ValidationError(
+            ('Год создания произведения не может быть больше текущего!'),
+            params={'value': value},)
 
 
 class Category(models.Model):
@@ -43,6 +51,7 @@ class Title(models.Model):
     name = models.CharField(verbose_name='Название произведения',
                             max_length=200)
     year = models.IntegerField(verbose_name='Дата выхода',
+                               validators=[validate_date],
                                default=None)
     description = models.TextField(verbose_name='Описание произведения',
                                    null=True,
@@ -95,6 +104,9 @@ class Review(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['title', 'author'],
                                     name='unique_review'), ]
+
+    def __str__(self):
+        return self.text[:15]
 
 
 class Comment(models.Model):
