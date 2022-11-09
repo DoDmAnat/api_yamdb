@@ -1,6 +1,5 @@
-import uuid
-
 from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework import filters, status, viewsets
@@ -59,7 +58,7 @@ def sign_up(request):
             'Пользователь с данным username или email уже существует',
             status=status.HTTP_400_BAD_REQUEST
         )
-    confirmation_code = str(uuid.uuid4())
+    confirmation_code = default_token_generator.make_token(user)
     user.confirmation_code = confirmation_code
     user.save()
     send_mail(

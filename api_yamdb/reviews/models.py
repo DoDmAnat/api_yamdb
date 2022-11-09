@@ -1,18 +1,11 @@
-from datetime import datetime
-
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-User = get_user_model()
+from users.models import User
 
+from .validators import validate_date
 
-def validate_date(value):
-    if value > datetime.now().year:
-        raise ValidationError(
-            ('Год создания произведения не может быть больше текущего!'),
-            params={'value': value},)
+SYMBOLS_LIMIT = 15
 
 
 class Category(models.Model):
@@ -22,13 +15,13 @@ class Category(models.Model):
                             max_length=50,
                             unique=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
 class Genre(models.Model):
@@ -38,13 +31,13 @@ class Genre(models.Model):
                             max_length=50,
                             unique=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
 class Title(models.Model):
@@ -67,13 +60,13 @@ class Title(models.Model):
                                  null=True,
                                  default=None)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
         ordering = ['name']
+
+    def __str__(self):
+        return self.name
 
 
 class Review(models.Model):
@@ -106,7 +99,7 @@ class Review(models.Model):
                                     name='unique_review'), ]
 
     def __str__(self):
-        return self.text[:15]
+        return self.text[:SYMBOLS_LIMIT]
 
 
 class Comment(models.Model):

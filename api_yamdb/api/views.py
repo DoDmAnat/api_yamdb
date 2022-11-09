@@ -36,7 +36,7 @@ class CategoryViewSet(ListCreateDestroyViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(
+    queryset = Title.objects.annotate(
         Avg("reviews__score")
     ).order_by('name')
     http_method_names = ['get', 'post', 'patch', 'delete', ]
