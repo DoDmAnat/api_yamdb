@@ -11,13 +11,12 @@ class ReviewSerializer(serializers.ModelSerializer):
     def validate(self, data):
         author_id = self.context['request'].user.id
         title_id = self.context.get('view').kwargs.get('title_id')
-        if (self.context.get('request').method == 'POST'
-                and Review.objects.filter(title=title_id,
-                                          author=author_id).exists()):
-            raise serializers.ValidationError(
-                'Вы уже оставляли отзыв на данное произведение'
-            )
-        return data
+        if (self.context.get('request').method != 'POST'
+            or not Review.objects.filter(title=title_id,
+                                         author=author_id).exists()):
+            return data
+        raise serializers.ValidationError(
+            'Вы уже оставляли отзыв на данное произведение')
 
     class Meta:
         fields = ('id', 'text', 'author', 'score', 'pub_date', 'title')

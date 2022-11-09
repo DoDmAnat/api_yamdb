@@ -1,13 +1,13 @@
-from api.service import TitlesFilter
+from api.v1.service import TitlesFilter
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
-
 from reviews.models import Category, Genre, Review, Title
+
 from .mixins import ListCreateDestroyViewSet
-from .permissions import (IsAdminModeratorOrReadOnly, IsAdminOrReadOnly,
-                          IsAdminModeratorAuthor)
+from .permissions import (IsAdminModeratorAuthor, IsAdminModeratorOrReadOnly,
+                          IsAdminOrReadOnly)
 from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, ReadOnlyTitleSerializer,
                           ReviewSerializer, TitleSerializer)
@@ -36,7 +36,7 @@ class CategoryViewSet(ListCreateDestroyViewSet):
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.annotate(
+    queryset = Title.objects.select_related('category').annotate(
         Avg("reviews__score")
     ).order_by('name')
     http_method_names = ['get', 'post', 'patch', 'delete', ]
