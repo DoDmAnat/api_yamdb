@@ -5,6 +5,10 @@ from users.views import UserViewSet, get_token, sign_up
 from .views import (CategoryViewSet, CommentViewSet, GenreViewSet,
                     ReviewViewSet, TitleViewSet)
 
+auth_patterns = [
+    path('token/', get_token),
+    path('signup/', sign_up),
+]
 
 v1_router = DefaultRouter()
 v1_router.register('users', UserViewSet, basename='users')
@@ -20,6 +24,5 @@ v1_router.register(
 
 urlpatterns = [
     path('', include(v1_router.urls)),
-    path('auth/token/', get_token),
-    path('auth/signup/', sign_up),
+    path('auth/', include(auth_patterns)),
 ]
