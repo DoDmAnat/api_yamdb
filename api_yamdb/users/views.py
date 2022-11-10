@@ -48,16 +48,10 @@ def sign_up(request):
     serializer.is_valid(raise_exception=True)
     email = serializer.validated_data['email']
     username = serializer.validated_data['username']
-    try:
-        user, create = User.objects.get_or_create(
-            username=username,
-            email=email
-        )
-    except IntegrityError:
-        return Response(
-            'Пользователь с данным username или email уже существует',
-            status=status.HTTP_400_BAD_REQUEST
-        )
+    user, create = User.objects.get_or_create(
+        username=username,
+        email=email
+    )
     confirmation_code = default_token_generator.make_token(user)
     user.confirmation_code = confirmation_code
     user.save()
@@ -76,7 +70,7 @@ def get_token(request):
     username = serializer.validated_data['username']
     confirmation_code = serializer.validated_data['confirmation_code']
     user_base = get_object_or_404(User, username=username)
-    if confirmation_code == user_base.confirmation_code:
+    if default_token_generator.check_token(user_base, confirmation_code):
         token = str(AccessToken.for_user(user_base))
         return Response({'token': token}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

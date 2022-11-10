@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from rest_framework.exceptions import ValidationError
 from .models import User
 
 
@@ -7,9 +7,16 @@ class SignUpSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=254, required=True)
     username = serializers.CharField(max_length=150, required=True)
 
+    def validate_data(self, data):
+        if (User.objects.filter(email_iexact=data).exists() or
+                User.objects.filter(username_iexact=data).exists):
+            raise ValidationError(
+                'Пользователь с данным email уже существует.')
+        return data
+
     def validate(self, data):
-        if data['username'] == 'me':
-            raise serializers.ValidationError('Логин "" нельзя использовать')
+        if data == 'me':
+            raise ValidationError('Недопустимый логин')
         return data
 
     class Meta:
