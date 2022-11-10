@@ -7,15 +7,20 @@ class SignUpSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=254, required=True)
     username = serializers.CharField(max_length=150, required=True)
 
-    def validate_data(self, data):
-        if (User.objects.filter(email_iexact=data).exists() or
-                User.objects.filter(username_iexact=data).exists):
+    def validate_email(self, data):
+        if User.objects.filter(email__iexact=data).exists():
             raise ValidationError(
                 'Пользователь с данным email уже существует.')
         return data
 
+    def validate_username(self, data):
+        if User.objects.filter(username__iexact=data).exists():
+            raise ValidationError(
+                'Пользователь с данным username уже существует.')
+        return data
+
     def validate(self, data):
-        if data == 'me':
+        if data['username'] == 'me':
             raise ValidationError('Недопустимый логин')
         return data
 

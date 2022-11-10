@@ -1,7 +1,6 @@
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
-from django.db import IntegrityError
 from rest_framework import filters, status, viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, action, permission_classes
