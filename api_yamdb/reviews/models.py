@@ -1,4 +1,5 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (MaxValueValidator, MinValueValidator,
+                                    RegexValidator)
 from django.db import models
 
 from users.models import User
@@ -13,7 +14,9 @@ class Category(models.Model):
                             max_length=256)
     slug = models.SlugField(verbose_name='Метка категории',
                             max_length=50,
-                            unique=True)
+                            unique=True,
+                            validators=[RegexValidator(r'^[-a-zA-Z0-9_]+$',
+                                        message='Недопустимые символы')])
 
     class Meta:
         verbose_name = 'Категория'
@@ -29,7 +32,9 @@ class Genre(models.Model):
                             max_length=256)
     slug = models.SlugField(verbose_name='Метка жанра',
                             max_length=50,
-                            unique=True)
+                            unique=True,
+                            validators=[RegexValidator(r'^[-a-zA-Z0-9_]+$',
+                                        message='Недопустимые символы')])
 
     class Meta:
         verbose_name = 'Жанр'
@@ -74,7 +79,7 @@ class Review(models.Model):
                               verbose_name='Произведение',
                               on_delete=models.CASCADE,
                               related_name='reviews')
-    text = models.TextField(verbose_name='Текст', )
+    text = models.TextField(verbose_name='Текст')
     author = models.ForeignKey(User,
                                verbose_name='Автор',
                                on_delete=models.CASCADE,
